@@ -44,7 +44,6 @@
 
 <script>
   import auth from './auth'
-
   export default {
     name: 'app',
     data() {
@@ -59,7 +58,7 @@
     },
     methods: {
       signOut() {
-        auth.signOut()
+        auth.signOut();
       },
       clicked() {
         this.counter = Math.random() * this.max

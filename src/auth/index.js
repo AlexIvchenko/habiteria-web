@@ -65,7 +65,8 @@ export default {
   signOut() {
     localStorage.removeItem('username');
     localStorage.removeItem('password');
-    this.user.authenticated = false
+    this.user.authenticated = false;
+    router.push('/signIn');
   },
 
   checkAuth() {
