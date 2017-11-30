@@ -41,8 +41,7 @@ export default {
         }
       }.bind(this))
       .catch(function (error) {
-        console.error(error);
-        context.error = error;
+        context.errors = error.response.data;
       })
   },
 
@@ -54,11 +53,12 @@ export default {
         localStorage.setItem('password', credentials.password);
         this.user.authenticated = true;
         if (redirect) {
+          console.log(redirect);
           router.push(redirect);
         }
-      })
+      }.bind(this))
       .catch(function (error) {
-        context.error = error;
+        context.errors = error.response.data;
       })
   },
 
