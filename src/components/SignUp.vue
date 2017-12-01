@@ -1,100 +1,100 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-4">
+  <div>
+    <form class="md-layout-row md-gutter">
+      <md-card class="md-flex-50 md-flex-small-100">
+        <md-card-header>
+          <div class="md-title">Sign Up</div>
+        </md-card-header>
 
-      </div>
-      <div class="col-4">
+        <md-card-content>
+          <div class="md-layout-row md-layout-wrap md-gutter">
+            <div class="md-flex md-flex-small-100">
+              <md-field :class="getUsernameValidationClass()">
+                <label for="username">Username</label>
+                <md-input name="first-name" id="username" v-model="credentials.username"></md-input>
+                <span class="md-error" v-if="">{{ errors.fieldErrors.username }}</span>
+              </md-field>
+            </div>
 
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-            <div class="form-group">
-              <b-form-input name="username" v-model="credentials.username" type="text" class="form-control"
-                            id="username"
-                            :state="uState"
-                            aria-describedby="password-help password-feedback"
-                            placeholder="Enter username"></b-form-input>
-              <b-form-invalid-feedback id="username-feedback">
-                {{ errors.fieldErrors.username }}
-              </b-form-invalid-feedback>
-              <b-form-text id="username-help">
-                Enter your username.
-              </b-form-text>
+            <div class="md-flex md-flex-small-100">
+              <md-field :class="getEmailValidationClass()">
+                <label for="email">Email</label>
+                <md-input name="email" id="email" type="email" v-model="credentials.email"></md-input>
+                <span class="md-error" v-if="">{{ errors.fieldErrors.email }}</span>
+              </md-field>
             </div>
-            <div class="form-group">
-              <b-form-input name="email" v-model="credentials.email" type="text" class="form-control"
-                            id="email"
-                            :state="eState"
-                            aria-describedby="email-help email-feedback"
-                            placeholder="Enter email"></b-form-input>
-              <b-form-invalid-feedback id="email-feedback">
-                {{ errors.fieldErrors.email }}
-              </b-form-invalid-feedback>
-              <b-form-text id="email-help">
-                Enter your email.
-              </b-form-text>
+
+            <div class="md-flex md-flex-small-100">
+              <md-field :class="getPasswordValidationClass()">
+                <label for="password">Password</label>
+                <md-input type="password" name="password" id="password" v-model="credentials.password"></md-input>
+                <span class="md-error" v-if="">{{ errors.fieldErrors.password }}</span>
+              </md-field>
             </div>
-            <div class="form-group">
-              <b-form-input name="password" v-model="credentials.password" type="password" class="form-control"
-                            id="password"
-                            :state="pState"
-                            aria-describedby="password-help"
-                            placeholder="Password"></b-form-input>
-              <b-form-invalid-feedback id="password-feedback">
-                {{ errors.fieldErrors.password }}
-              </b-form-invalid-feedback>
-              <b-form-text id="password-help">
-                Enter your password.
-              </b-form-text>
-            </div>
-            <button class="btn btn-primary btn-lg" v-on:click="signUp">Sign Up</button>
           </div>
-        </div>
-      </div>
-    </div>
+        </md-card-content>
+
+        <md-card-actions>
+          <md-button class="md-primary" @click="signUp">Sign Up</md-button>
+        </md-card-actions>
+      </md-card>
+    </form>
   </div>
 </template>
 
 <script>
   import auth from '../auth'
-
   export default {
-    name: 'SignUp',
-    data() {
-      return {
-        credentials: {
-          username: "",
-          password: "",
-          email: "",
+    name: 'Test',
+    data: () => ({
+      credentials: {
+        username: "",
+        password: "",
+        email: "",
+      },
+      errors: {
+        fieldErrors: {
+          username: null,
+          email: null,
+          password: null
         },
-        errors: {
-          fieldErrors: {
-            username: null,
-            email: null,
-            password: null
-          },
-          resourceErrors: [],
-          errors: []
-        }
+        resourceErrors: [],
+        errors: []
       }
-    },
-    computed: {
-      uState() {
-        return this.errors.fieldErrors.username === undefined || this.errors.fieldErrors.username === null;
-      },
-      eState() {
-        return this.errors.fieldErrors.email === undefined || this.errors.fieldErrors.email === null;
-      },
-      pState() {
-        return this.errors.fieldErrors.password === undefined || this.errors.fieldErrors.password === null;
-      }
-    },
+    }),
+
     methods: {
+      getUsernameValidationClass () {
+        if (this.errors.fieldErrors.username === undefined || this.errors.fieldErrors.username === null) {
+          return ''
+        } else {
+          return 'md-invalid'
+        }
+      },
+      getEmailValidationClass () {
+        if (this.errors.fieldErrors.email === undefined || this.errors.fieldErrors.email === null) {
+          return ''
+        } else {
+          return 'md-invalid'
+        }
+      },
+      getPasswordValidationClass () {
+        if (this.errors.fieldErrors.password === undefined || this.errors.fieldErrors.password === null) {
+          return ''
+        } else {
+          return 'md-invalid'
+        }
+      },
       signUp() {
-        auth.signUp(this, this.credentials, '/signIn');
+        auth.signUp(this, this.credentials, '/tracking');
       }
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  .md-card {
+    width: 320px;
+    margin: 0 auto;
+  }
+</style>

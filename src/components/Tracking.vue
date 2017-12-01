@@ -1,19 +1,21 @@
 <template>
   <div>
-    <b-card-group columns>
-      <b-card v-for="(habit, index) in orderedHabits" :key="habit.name"
-              :bg-variant="habitCardStyle(habit)"
-              text-variant="white"
-              :header="habit.name"
-              class="text-center">
-        <p class="card-text">Name: {{ habit.required }}</p>
-        <p class="card-text">Repeat: {{ habit.repeat }}</p>
-        <b-btn class="btn btn-primary" v-if="habit._links.perform" v-on:click="doPerformHabit(habit)">Perform
-        </b-btn>
-        <b-btn class="btn btn-danger" v-if="habit._links.fail" v-on:click="doFailHabit(habit)">Fail</b-btn>
-        <b-btn class="btn btn-warning" v-if="habit._links.undo" v-on:click="doUndoHabit(habit)">Undo</b-btn>
-      </b-card>
-    </b-card-group>
+    <md-card v-for="(habit, index) in orderedHabits" :key="habit.name" md-with-hover
+             class="md-primary"
+             :md-theme="habitCardStyle(habit)">
+      <md-card-header>
+        <md-card-header-text>
+          <div class="md-title">{{ habit.name }}</div>
+          <div class="md-subhead">{{ habit.description }}</div>
+        </md-card-header-text>
+      </md-card-header>
+
+      <md-card-actions>
+        <md-button v-if="habit._links.perform" v-on:click="doPerformHabit(habit)">Perform</md-button>
+        <md-button v-if="habit._links.fail" v-on:click="doFailHabit(habit)">Fail</md-button>
+        <md-button v-if="habit._links.undo" v-on:click="doUndoHabit(habit)">Undo</md-button>
+      </md-card-actions>
+    </md-card>
   </div>
 </template>
 
@@ -45,17 +47,13 @@
         });
     },
     methods: {
-      habitCardStyle: function(habit) {
+      habitCardStyle: function (habit) {
         if (habit.status === 'FAIL') {
-          return 'danger'
+          return 'red-card'
         } else if (habit.status === 'SUCCESS') {
-          return 'success'
+          return 'green-card'
         } else if (habit.status === 'UNVERIFIED') {
-          if (habit.required) {
-            return 'primary'
-          } else {
-            return 'warning'
-          }
+          return 'white-card'
         }
       },
       doPerformHabit: function (habit) {
@@ -109,3 +107,33 @@
     }
   }
 </script>
+
+<style lang="scss" scoped>
+  @import "~vue-material/dist/theme/engine";
+
+  @include md-register-theme("green-card", (
+    primary: md-get-palette-color(green, 500)
+  ));
+
+  @include md-register-theme("white-card", (
+    primary: md-get-palette-color(white, 500)
+  ));
+
+  @include md-register-theme("red-card", (
+    primary: md-get-palette-color(red, 500)
+  ));
+
+  @include md-register-theme("orange-card", (
+    primary: md-get-palette-color(orange, 500)
+  ));
+
+  @import "~vue-material/dist/base/theme";
+  @import "~vue-material/dist/components/MdCard/theme";
+
+  .md-card {
+    width: 200px;
+    margin: 4px;
+    display: inline-block;
+    vertical-align: top;
+  }
+</style>
