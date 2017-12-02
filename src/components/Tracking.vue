@@ -5,7 +5,7 @@
              :md-theme="habitCardStyle(habit)">
       <md-card-header>
         <md-card-header-text>
-          <div class="md-title">{{ habit.name }}</div>
+          <div class="md-title">{{ habit.name }} #{{ habit.repeat }}</div>
           <div class="md-subhead">{{ habit.description }}</div>
         </md-card-header-text>
       </md-card-header>

@@ -3,7 +3,7 @@ import auth from '../auth'
 
 
 var actions = {};
-const API_URL = 'http://localhost:8888/api';
+const API_URL = 'http://localhost:8888/api/';
 
 export default {
   loadActions() {

@@ -1,11 +1,11 @@
 import router from '../router'
 import axios from 'axios'
 
-const API_URL = 'http://localhost:8888/api';
+const API_URL = 'http://localhost:8888/api/';
 
 const SIGN_IN_URL = API_URL;
 
-const SIGN_UP_URL = API_URL + '/users';
+const SIGN_UP_URL = API_URL + 'users';
 
 export default {
   user: {
