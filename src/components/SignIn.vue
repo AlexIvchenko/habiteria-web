@@ -1,25 +1,32 @@
 <template>
-  <div class="container">
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-body">
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input name="username" v-model="credentials.username" type="text" class="form-control"
-                   id="username"
-                   placeholder="Enter username"/>
-          </div>
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input name="password" v-model="credentials.password" type="password" class="form-control"
-                   id="password"
-                   aria-describedby="passwordHelp" placeholder="Password"/>
-          </div>
-          <button class="btn btn-primary btn-lg" v-on:click="signIn">Sign In</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <v-container>
+    <v-layout>
+      <v-flex xs12 sm4 offset-sm4>
+        <v-card>
+          <v-card-text>
+            <v-form v-model="valid" @submit.prevent="signIn()">
+              <v-text-field
+                label="Username"
+                v-model="credentials.username"
+                :rules="usernameRules"
+                :counter="20"
+                required
+              ></v-text-field>
+              <v-text-field
+                type="password"
+                label="Password"
+                v-model="credentials.password"
+                :rules="passwordRules"
+                required
+              ></v-text-field>
+              <v-btn class="primary" type="submit">Sign In</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
+
 </template>
 
 <script>
@@ -27,19 +34,30 @@
 
   export default {
     name: 'SignIn',
-    data() {
+    data () {
       return {
         credentials: {
           username: '',
           password: ''
         },
-        error: ''
+        error: '',
+        valid: false,
+        usernameRules: [
+          (v) => !!v || 'Name is required',
+          (v) => v.length <= 20 || 'Name must be less than 20 characters'
+        ],
+        passwordRules: [
+          (v) => !!v || 'E-mail is required',
+        ]
       }
     },
     methods: {
       signIn() {
         console.info('signing in');
-        auth.signIn(this, this.credentials, 'tracking')
+        this.$store.dispatch("login", {
+          username: this.credentials.username,
+          password: this.credentials.password
+        });
       }
     }
   }

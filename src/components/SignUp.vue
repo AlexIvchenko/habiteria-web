@@ -1,92 +1,97 @@
 <template>
-  <div>
-    <form class="md-layout-row md-gutter">
-      <md-card class="md-flex-50 md-flex-small-100">
-        <md-card-header>
-          <div class="md-title">Sign Up</div>
-        </md-card-header>
-
-        <md-card-content>
-          <div class="md-layout-row md-layout-wrap md-gutter">
-            <div class="md-flex md-flex-small-100">
-              <md-field :class="getUsernameValidationClass()">
-                <label for="username">Username</label>
-                <md-input name="first-name" id="username" v-model="credentials.username"></md-input>
-                <span class="md-error" v-if="">{{ errors.fieldErrors.username }}</span>
-              </md-field>
-            </div>
-
-            <div class="md-flex md-flex-small-100">
-              <md-field :class="getEmailValidationClass()">
-                <label for="email">Email</label>
-                <md-input name="email" id="email" type="email" v-model="credentials.email"></md-input>
-                <span class="md-error" v-if="">{{ errors.fieldErrors.email }}</span>
-              </md-field>
-            </div>
-
-            <div class="md-flex md-flex-small-100">
-              <md-field :class="getPasswordValidationClass()">
-                <label for="password">Password</label>
-                <md-input type="password" name="password" id="password" v-model="credentials.password"></md-input>
-                <span class="md-error" v-if="">{{ errors.fieldErrors.password }}</span>
-              </md-field>
-            </div>
-          </div>
-        </md-card-content>
-
-        <md-card-actions>
-          <md-button class="md-primary" @click="signUp">Sign Up</md-button>
-        </md-card-actions>
-      </md-card>
-    </form>
-  </div>
+  <v-container>
+    <v-layout row v-if="error">
+      <v-flex xs12 sm4 offset-sm4>
+        <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+      </v-flex>
+    </v-layout>
+    <v-layout>
+      <v-flex xs12 sm4 offset-sm4>
+        <v-card>
+          <v-card-text>
+            <v-form v-model="valid" @submit.prevent="signUp()">
+              <v-text-field
+                label="Username"
+                v-model="credentials.username"
+                :rules="usernameRules"
+                :counter="20"
+                required
+              ></v-text-field>
+              <v-text-field
+                label="Email"
+                v-model="credentials.email"
+                :rules="emailRules"
+                required
+              ></v-text-field>
+              <v-text-field
+                type="password"
+                label="Password"
+                v-model="credentials.password"
+                :rules="passwordRules"
+                required
+              ></v-text-field>
+              <v-btn class="primary" type="submit" :disabled="!formIsValid" :loading="loading">
+                Sign Up
+                <span slot="loader" class="custom-loader">
+                  <v-icon light>cached</v-icon>
+                </span>
+              </v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
   import auth from '../auth'
+
   export default {
     name: 'Test',
     data: () => ({
       credentials: {
-        username: "",
-        password: "",
-        email: "",
+        username: '',
+        password: '',
+        email: '',
       },
-      errors: {
-        fieldErrors: {
-          username: null,
-          email: null,
-          password: null
-        },
-        resourceErrors: [],
-        errors: []
-      }
+      valid: false,
+      usernameRules: [
+        (v) => !!v || 'Name is required',
+        (v) => v.length <= 20 || 'Name must be less than 20 characters'
+      ],
+      passwordRules: [
+        (v) => !!v || 'E-mail is required',
+      ],
+      emailRules: []
     }),
 
+    computed: {
+      formIsValid() {
+        return this.credentials.username !== '' &&
+          this.credentials.email !== '' &&
+          this.credentials.password !== ''
+      },
+      loading() {
+        return this.$store.getters.loading;
+      },
+      error() {
+        return this.$store.getters.error;
+      }
+    },
+
     methods: {
-      getUsernameValidationClass () {
-        if (this.errors.fieldErrors.username === undefined || this.errors.fieldErrors.username === null) {
-          return ''
-        } else {
-          return 'md-invalid'
-        }
-      },
-      getEmailValidationClass () {
-        if (this.errors.fieldErrors.email === undefined || this.errors.fieldErrors.email === null) {
-          return ''
-        } else {
-          return 'md-invalid'
-        }
-      },
-      getPasswordValidationClass () {
-        if (this.errors.fieldErrors.password === undefined || this.errors.fieldErrors.password === null) {
-          return ''
-        } else {
-          return 'md-invalid'
-        }
-      },
       signUp() {
-        auth.signUp(this, this.credentials, '/tracking');
+        console.info('signing up');
+        this.$store.dispatch("signUp", {
+          username: this.credentials.username,
+          email: this.credentials.email,
+          password: this.credentials.password
+        });
+      },
+      onDismissed() {
+        console.log("dismissed");
+        this.$store.dispatch("clearError");
       }
     }
   }

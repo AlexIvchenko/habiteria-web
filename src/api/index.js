@@ -1,31 +1,24 @@
 import axios from 'axios'
-import auth from '../auth'
+// import {store} from '../store'
 
-
-var actions = {};
 const API_URL = 'http://localhost:8888/api/';
 
 export default {
-  loadActions() {
-    console.log('load actions ' + this.api);
-    axios.get(this.api).then(function (response) {
-      actions = response.data._links;
-    }.bind(this));
-  },
-
   getActions() {
     return this.get(API_URL);
   },
 
   get(url) {
-    if (auth.user.authenticated) {
+    const auth = {
+      username: localStorage.getItem('username'),
+      password: localStorage.getItem('password')
+    };
+    if (auth.username && auth.password) {
+      console.info({auth: auth});
       return axios({
         url: url,
         method: 'get',
-        auth: {
-          username: auth.credentials().username,
-          password: auth.credentials().password
-        }
+        auth: auth
       })
     } else {
       return axios.get(url);
@@ -33,23 +26,19 @@ export default {
   },
 
   post(url, data) {
-    if (auth.user.authenticated) {
+    const auth = {
+      username: localStorage.getItem('username'),
+      password: localStorage.getItem('password')
+    };
+    if (auth.username && auth.password) {
       return axios({
         url: url,
         method: 'post',
         data: data,
-        auth: {
-          username: auth.credentials().username,
-          password: auth.credentials().password
-        }
+        auth: auth
       })
     } else {
-      return axios.get(url);
+      return axios.post(url, data);
     }
-  },
-
-
-  canSignUp() {
-    return this.actions.signUp !== null;
   }
 }

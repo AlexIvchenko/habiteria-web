@@ -1,22 +1,23 @@
 <template>
-  <div>
-    <md-card v-for="(habit, index) in orderedHabits" :key="habit.name" md-with-hover
-             class="md-primary"
-             :md-theme="habitCardStyle(habit)">
-      <md-card-header>
-        <md-card-header-text>
-          <div class="md-title">{{ habit.name }} #{{ habit.repeat }}</div>
-          <div class="md-subhead">{{ habit.description }}</div>
-        </md-card-header-text>
-      </md-card-header>
-
-      <md-card-actions>
-        <md-button v-if="habit._links.perform" v-on:click="doPerformHabit(habit)">Perform</md-button>
-        <md-button v-if="habit._links.fail" v-on:click="doFailHabit(habit)">Fail</md-button>
-        <md-button v-if="habit._links.undo" v-on:click="doUndoHabit(habit)">Undo</md-button>
-      </md-card-actions>
-    </md-card>
-  </div>
+<v-container>
+  <v-layout row wrap v-for="(habit, index) in orderedHabits" :key="habit.name" class="mb-2">
+    <v-flex xs12 sm8 offset-sm2 md6 offset-md3 lg4 offset-lg4>
+      <v-card :color="habitCardStyle(habit)" class="white--text">
+        <v-card-title primary-title>
+          <h5 class="headline">{{ habit.name }} #{{ habit.repeat }}</h5>
+        </v-card-title>
+        <v-card-text>
+          <div>{{ habit.description }}</div>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn flat color="green" v-if="habit._links.perform" v-on:click="doPerformHabit(habit)">Perform</v-btn>
+          <v-btn flat color="red" v-if="habit._links.fail" v-on:click="doFailHabit(habit)">Fail</v-btn>
+          <v-btn flat color="orange" v-if="habit._links.undo" v-on:click="doUndoHabit(habit)">Undo</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
+  </v-layout>
+</v-container>
 </template>
 
 <script>
@@ -49,11 +50,11 @@
     methods: {
       habitCardStyle: function (habit) {
         if (habit.status === 'FAIL') {
-          return 'red-card'
+          return 'red darken-2'
         } else if (habit.status === 'SUCCESS') {
-          return 'green-card'
+          return 'blue-grey darken-2'
         } else if (habit.status === 'UNVERIFIED') {
-          return 'white-card'
+          return 'darken-2'
         }
       },
       doPerformHabit: function (habit) {
@@ -91,8 +92,10 @@
       },
 
       handleGetCurrentHabitListRequest: function (response) {
-        this.habits = response.data._embedded.scheduledHabitResourceList;
-        console.log(response.data._embedded);
+        if (response.data._embedded && response.data._embedded.scheduledHabitResourceList) {
+          this.habits = response.data._embedded.scheduledHabitResourceList;
+          console.log(response.data._embedded);
+        }
       },
 
       refreshHabits: function () {
@@ -107,33 +110,3 @@
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  @import "~vue-material/dist/theme/engine";
-
-  @include md-register-theme("green-card", (
-    primary: md-get-palette-color(green, 500)
-  ));
-
-  @include md-register-theme("white-card", (
-    primary: md-get-palette-color(white, 500)
-  ));
-
-  @include md-register-theme("red-card", (
-    primary: md-get-palette-color(red, 500)
-  ));
-
-  @include md-register-theme("orange-card", (
-    primary: md-get-palette-color(orange, 500)
-  ));
-
-  @import "~vue-material/dist/base/theme";
-  @import "~vue-material/dist/components/MdCard/theme";
-
-  .md-card {
-    width: 200px;
-    margin: 4px;
-    display: inline-block;
-    vertical-align: top;
-  }
-</style>
