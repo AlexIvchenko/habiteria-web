@@ -2,7 +2,7 @@
   <v-container>
     <v-layout row v-if="error">
       <v-flex xs12 sm4 offset-sm4>
-        <app-alert @dismissed="onDismissed" :text="error"></app-alert>
+        <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
       </v-flex>
     </v-layout>
     <v-layout>
@@ -57,13 +57,15 @@
       },
       valid: false,
       usernameRules: [
-        (v) => !!v || 'Name is required',
-        (v) => v.length <= 20 || 'Name must be less than 20 characters'
+        (v) => !!v || 'Username is required',
+        (v) => v.length <= 20 || 'Username must be less than 20 characters',
       ],
       passwordRules: [
-        (v) => !!v || 'E-mail is required',
+        (v) => !!v || 'Password is required',
       ],
-      emailRules: []
+      emailRules: [
+        (v) => !!v || 'E-mail is required',
+      ]
     }),
 
     computed: {
@@ -96,10 +98,3 @@
     }
   }
 </script>
-
-<style lang="scss" scoped>
-  .md-card {
-    width: 320px;
-    margin: 0 auto;
-  }
-</style>
