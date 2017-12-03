@@ -5,6 +5,7 @@
       <v-card :color="habitCardStyle(habit)" class="white--text">
         <v-card-title primary-title>
           <h5 class="headline">{{ habit.name }} #{{ habit.repeat }}</h5>
+          <h6 class="subheader">{{ habit.date | date }}</h6>
         </v-card-title>
         <v-card-text>
           <div>{{ habit.description }}</div>
