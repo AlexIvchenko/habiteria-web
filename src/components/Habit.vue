@@ -4,12 +4,11 @@
       <v-flex d-flex xs12 sm12 md6 lg6>
         <v-layout row wrap>
           <v-flex d-flex xs12 mb-4>
-            <v-card class="info">
+            <v-card>
               <v-card-title primary-title>
                 <v-flex>
                   <h5 class="headline white--text mb-0">{{ habit.name }}</h5>
-                  <h6 class="subheading black--text mb-0">{{ habit.date | date }}</h6>
-                  <v-progress-linear :value="habit.progress" height="15" color="error"></v-progress-linear>
+                  <v-progress-linear :value="habit.progress" height="15" :color="color(habit)"></v-progress-linear>
                 </v-flex>
               </v-card-title>
             </v-card>
@@ -18,9 +17,7 @@
             <v-card :color="recordCardStyle(rec)">
               <v-card-title primary-title>
                 <v-flex xs12>
-                  <h5 class="headline white--text mb-0">{{ rec.status }}</h5>
-                  <h5 class="headline mb-0">{{ rec.time | date }}</h5>
-                  <h5 class="headline mb-0">Repeat #{{ rec.repeat }}</h5>
+                  <h5 class="headline mb-0">Repeat #{{ rec.repeat }} - {{ rec.status }} ({{ rec.time | date }})</h5>
                 </v-flex>
               </v-card-title>
             </v-card>
@@ -55,13 +52,16 @@
       }
     },
     methods: {
+      color(habit) {
+        return ['error', 'warning', 'success'][Math.floor(habit.progress / 40)]
+      },
       recordCardStyle: function (rec) {
         if (rec.status === 'FAIL') {
-          return 'red'
+          return 'red darken-3'
         } else if (rec.status === 'SUCCESS') {
-          return 'green'
+          return 'green darken-3'
         } else if (rec.status === 'UNVERIFIED') {
-          return 'white'
+          return 'grey darken-3'
         }
       },
       getCalendar() {

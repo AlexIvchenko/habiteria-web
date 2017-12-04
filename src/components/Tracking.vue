@@ -51,11 +51,11 @@
     methods: {
       habitCardStyle: function (habit) {
         if (habit.status === 'FAIL') {
-          return 'red darken-2'
+          return 'red darken-3'
         } else if (habit.status === 'SUCCESS') {
-          return 'blue-grey darken-2'
+          return 'green darken-3'
         } else if (habit.status === 'UNVERIFIED') {
-          return 'darken-2'
+          return 'grey darken-3'
         }
       },
       doPerformHabit: function (habit) {

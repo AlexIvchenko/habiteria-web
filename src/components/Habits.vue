@@ -2,13 +2,13 @@
     <v-container>
       <v-layout row wrap v-for="habit in habits" :key="habit.name" class="mb-2">
         <v-flex xs12 sm8 offset-sm2 md6 offset-md3 lg4 offset-lg4>
-          <v-card class="info">
+          <v-card>
             <v-container fluid>
               <v-card-title primary-title>
                 <v-flex>
                   <h5 class="headline white--text mb-0">{{ habit.name }}</h5>
-                  <h6 class="subheading black--text mb-0">{{ habit.startDate | date }} - {{ habit.endDate | date }}</h6>
-                  <v-progress-linear :value="habit.progress" height="15" color="error"></v-progress-linear>
+                  <h6 class="subheading blue--text mb-0">{{ habit.startDate | date }}</h6>
+                  <v-progress-linear :value="habit.progress" height="15" :color="color(habit)"></v-progress-linear>
                 </v-flex>
               </v-card-title>
               <v-card-actions>
@@ -38,7 +38,12 @@
     },
     data() {
       return {
-
+        search: ''
+      }
+    },
+    methods: {
+      color(habit) {
+        return ['error', 'warning', 'success'][Math.floor(habit.progress / 40)]
       }
     }
   }

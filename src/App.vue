@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-      <v-toolbar class="primary">
+      <v-toolbar color="indigo">
         <v-toolbar-side-icon
           @click.stop="sideNav = !sideNav"
           class="hidden-md-and-up "></v-toolbar-side-icon>

@@ -34,6 +34,8 @@ export const store = new Vuex.Store({
       state.pending = false;
     },
     logout(state) {
+      state.loadedHabits = [];
+      state.loadedCurrentHabits = [];
       state.isLoggedIn = false;
     },
     setError(state, payload) {
@@ -108,9 +110,9 @@ export const store = new Vuex.Store({
           localStorage.setItem('password', creds.password);
           router.push("/habits");
           commit("loginSuccess");
-        }.bind(this))
+        })
         .catch(function (error) {
-          commit("setError", error)
+          commit("setError", error.response.data)
         });
     },
     signUp({commit}, creds) {

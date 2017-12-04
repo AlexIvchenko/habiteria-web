@@ -1,5 +1,10 @@
 <template>
   <v-container>
+    <v-layout row v-if="error">
+      <v-flex xs12 sm4 offset-sm4>
+        <app-alert @dismissed="onDismissed" :text="error.message"></app-alert>
+      </v-flex>
+    </v-layout>
     <v-layout>
       <v-flex xs12 sm4 offset-sm4>
         <v-card>
@@ -40,7 +45,6 @@
           username: '',
           password: ''
         },
-        error: '',
         valid: false,
         usernameRules: [
           (v) => !!v || 'Name is required',
@@ -51,6 +55,11 @@
         ]
       }
     },
+    computed: {
+      error() {
+        return this.$store.getters.error;
+      }
+    },
     methods: {
       signIn() {
         console.info('signing in');
@@ -58,6 +67,10 @@
           username: this.credentials.username,
           password: this.credentials.password
         });
+      },
+      onDismissed() {
+        console.log("dismissed");
+        this.$store.dispatch("clearError");
       }
     }
   }
