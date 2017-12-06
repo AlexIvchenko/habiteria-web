@@ -7,18 +7,7 @@ import { store } from './store'
 import DateFilter from './filters/date'
 import AlertCmp from './components/Shared/Alert.vue'
 
-// import BootstrapVue from 'bootstrap-vue'
-// import 'bootstrap/dist/css/bootstrap.css'
-// import 'bootstrap-vue/dist/bootstrap-vue.css'
-//
-// Vue.use(BootstrapVue);
-
 Vue.config.productionTip = false;
-
-// import VueMaterial from 'vue-material'
-// import 'vue-material/dist/vue-material.min.css'
-// import 'vue-material/dist/theme/default-dark.css'
-// Vue.use(VueMaterial);
 
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -33,6 +22,4 @@ new Vue({
   router,
   store,
   render: h => h(App)
-  // template: '<App/>',
-  // components: { App }
 });

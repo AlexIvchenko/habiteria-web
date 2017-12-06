@@ -73,8 +73,6 @@
       availableOptions: function () {
         var self = this;
         return self.menuItems.filter(function (item) {
-//          console.info(item.auth);
-//          console.info(self.$store.getters.isLoggedIn);
           return item.auth === self.$store.getters.isLoggedIn;
         })
       }
@@ -86,91 +84,3 @@
     }
   }
 </script>
-
-<!--&lt;!&ndash;<template>&ndash;&gt;-->
-<!--&lt;!&ndash;<div id="app">&ndash;&gt;-->
-<!--&lt;!&ndash;<v-app>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-navigation-drawer temporary v-model="sideNav">&ndash;&gt;-->
-<!--&lt;!&ndash;<v-list>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-list-tile>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-list-tile-action>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-icon>supervisor-account</v-icon>&ndash;&gt;-->
-<!--&lt;!&ndash;</v-list-tile-action>&ndash;&gt;-->
-<!--&lt;!&ndash;</v-list-tile>&ndash;&gt;-->
-<!--&lt;!&ndash;</v-list>&ndash;&gt;-->
-<!--&lt;!&ndash;</v-navigation-drawer>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-toolbar>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-toolbar-side-icon @click.native.stop="sideNav = !sideNav"></v-toolbar-side-icon>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-toolbar-title>Habiteria</v-toolbar-title>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-spacer></v-spacer>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-toolbar-items>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-btn flat>&ndash;&gt;-->
-<!--&lt;!&ndash;<v-icon left>supervisor-account</v-icon>&ndash;&gt;-->
-<!--&lt;!&ndash;Habits&ndash;&gt;-->
-<!--&lt;!&ndash;</v-btn>&ndash;&gt;-->
-<!--&lt;!&ndash;</v-toolbar-items>&ndash;&gt;-->
-<!--&lt;!&ndash;</v-toolbar>&ndash;&gt;-->
-<!--&lt;!&ndash;</v-app>&ndash;&gt;-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<div class="page-container">&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-app md-scrollbar>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-app-toolbar class="md-large md-dense">&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<div class="md-toolbar-section-start">&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-tabs md-sync-route>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-tab id="tab-home" md-label="Habiteria" to="/"></md-tab>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-tab v-if="user.authenticated" id="tab-pages" md-label="Habits" to="/habits"></md-tab>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-tab v-if="user.authenticated" id="tab-posts" md-label="Tracking" to="/tracking"></md-tab>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</md-tabs>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</div>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<div class="md-toolbar-section-end">&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-button v-if="!user.authenticated"><router-link to="signIn">Sign In</router-link></md-button>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-button v-if="!user.authenticated"><router-link to="signUp" >Sign Up</router-link></md-button>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<md-button v-if="user.authenticated" @click="signOut">Sign Out</md-button>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</div>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</md-app-toolbar>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;<md-app-content>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;<router-view/>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</md-app-content>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</md-app>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;</div>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;</template>&ndash;&gt;-->
-
-<!--<script>-->
-<!--import auth from './auth'-->
-<!--import router from './router'-->
-
-<!--export default {-->
-<!--name: 'app',-->
-<!--data() {-->
-<!--return {-->
-<!--sideNav: false,-->
-<!--user: auth.user,-->
-<!--counter: 45,-->
-<!--max: 100-->
-<!--}-->
-<!--},-->
-<!--created() {-->
-<!--auth.checkAuth();-->
-<!--},-->
-<!--methods: {-->
-<!--signOut() {-->
-<!--auth.signOut();-->
-<!--},-->
-<!--toIndex() {-->
-<!--router.push('/')-->
-<!--},-->
-<!--toHabits() {-->
-<!--router.push('habits')-->
-<!--},-->
-<!--toTracking() {-->
-<!--router.push('tracking')-->
-<!--}-->
-<!--}-->
-<!--}-->
-<!--</script>-->
-
-<!--<style>-->
-<!--#app {-->
-
-<!--}-->
