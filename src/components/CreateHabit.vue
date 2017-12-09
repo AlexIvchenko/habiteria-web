@@ -159,7 +159,25 @@
     },
     methods: {
       onCreateHabit() {
-        this.$store.dispatch('createHabit', this.habit)
+        this.$store.dispatch('createHabit', {
+          name: this.habit.name,
+          description: this.habit.description,
+          schedule: {
+            start: this.habit.schedule.start,
+            end: this.habit.schedule.end,
+            type: this.habit.schedule.type
+          }
+        }).then(() => {
+          this.clearForm();
+          this.$router.push('/habits')
+        });
+      },
+      clearForm() {
+        this.habit.name = '';
+        this.habit.description = '';
+        this.habit.schedule.start = '';
+        this.habit.schedule.end = '';
+        this.habit.schedule.type = '';
       }
     }
   }
