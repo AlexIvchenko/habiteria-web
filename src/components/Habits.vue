@@ -1,38 +1,68 @@
 <template>
     <v-container>
-      <v-layout>
-        <v-flex xs12 class="text-xs-center">
-          <v-progress-circular
-            indeterminate
-            color="primary"
-            :width="7"
-            :size="70"
-            v-if="loading"
-          ></v-progress-circular>
-        </v-flex>
-      </v-layout>
-      <v-layout row wrap v-for="habit in habits" :key="habit.name" class="mb-2">
-        <v-flex xs12 sm8 offset-sm2 md6 offset-md3 lg4 offset-lg4>
-          <v-card>
-            <v-container fluid>
-              <v-card-title primary-title>
-                <v-flex>
-                  <h5 class="headline white--text mb-0">{{ habit.name }}</h5>
-                  <h6 class="subheading blue--text mb-0">{{ habit.startDate | date }}</h6>
-                  <v-progress-linear :value="habit.progress" height="15" :color="color(habit)"></v-progress-linear>
-                </v-flex>
-              </v-card-title>
-              <v-card-actions>
-                <v-btn flat :to="'/habits/' + habit.name">
-                  <v-icon left light>arrow_forward</v-icon>
-                  View Habit
-                </v-btn>
-              </v-card-actions>
-            </v-container>
-          </v-card>
-        </v-flex>
+
+      <v-layout row justify-center v-if="loading">
+          <v-flex xs12 class="text-xs-center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+              :width="7"
+              :size="70"
+            ></v-progress-circular>
+          </v-flex>
       </v-layout>
 
+      <v-layout row wrap>
+        <v-flex xs12 sm8 offset-sm2 md8 offset-md2 lg6 offset-lg3>
+          <v-expansion-panel inset>
+            <v-expansion-panel-content v-for="habit in habits" :key="habit.name" class="mb-2" @expand="updateHabitToTrack(habit)">
+              <div slot="header">
+                <v-layout row wrap>
+                  <v-flex sm8>
+                    <h5 class="headline white--text mb-0">{{ habit.name }}</h5>
+                  </v-flex>
+                  <v-flex sm4 class="text-sm-right">
+                    <v-badge color="green" v-model="show" right>
+                      <span slot="badge">{{ habit.records.length }}</span>
+                    </v-badge>
+                  </v-flex>
+                </v-layout>
+
+                <h6 class="subheading blue--text mb-0">{{ habit.startDate | date }}</h6>
+                <v-progress-linear :value="habit.progress" height="15" :color="color(habit)"></v-progress-linear>
+              </div>
+
+              <v-list two-line subheader>
+                <v-subheader inset>Tracking</v-subheader>
+                <v-list-tile avatar v-for="record in habit.records">
+                  <v-list-tile-avatar>
+                    <v-icon class="grey lighten-1 white--text">folder</v-icon>
+                  </v-list-tile-avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title :class=stateClass(record)>{{ record.status }}</v-list-tile-title>
+                    <v-list-tile-sub-title>{{ record.time | date }}</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                  <v-list-tile-action>
+                    <v-btn flat color="green" v-if="record._links.perform" v-on:click="doPerformRecord(habit, record)">
+                      <v-icon color="green lighten-1">done_all</v-icon>
+                    </v-btn>
+                    <v-btn flat color="red" v-if="record._links.fail" v-on:click="doFailRecord(habit, record)">
+                      <v-icon color="red lighten-1">clear</v-icon>
+                    </v-btn>
+                    <v-btn flat color="orange" v-if="record._links.undo" v-on:click="doUndoRecord(habit, record)">
+                      <v-icon color="orange lighten-1">history</v-icon>
+                    </v-btn>
+                  </v-list-tile-action>
+                </v-list-tile>
+              </v-list>
+              <v-btn flat :to="'/habits/' + habit.name">
+                <v-icon left light>arrow_forward</v-icon>
+                View Statistic
+              </v-btn>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-flex>
+      </v-layout>
     </v-container>
 </template>
 
@@ -40,6 +70,9 @@
   export default {
     name: 'Habits',
     computed: {
+      tracking() {
+        return this.$store.getters.habitTracking;
+      },
       habits() {
         return this.$store.getters.loadedHabits
       },
@@ -52,12 +85,35 @@
     },
     data() {
       return {
-        search: ''
+        dialog: false,
       }
     },
     methods: {
+      stateClass(record) {
+        if (record.status === 'SUCCESS') {
+          return 'green--text'
+        } else if (record.status === 'FAIL') {
+          return 'red--text'
+        }
+        return 'blue--text';
+      },
       color(habit) {
         return ['error', 'warning', 'success'][Math.floor(habit.progress / 40)]
+      },
+      updateHabitToTrack(habit) {
+        console.log("update");
+        this.$store.dispatch("updateHabitToTrack", habit);
+      },
+      doPerformRecord: function (habit, record) {
+        this.$store.dispatch("doPerformRecord", {habit: habit, record: record});
+      },
+
+      doFailRecord: function (habit, record) {
+        this.$store.dispatch("doFailRecord", {habit: habit, record: record});
+      },
+
+      doUndoRecord: function (habit, record) {
+        this.$store.dispatch("doUndoRecord", {habit: habit, record: record});
       }
     }
   }

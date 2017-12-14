@@ -56,11 +56,59 @@ export const store = new Vuex.Store({
     },
     setLoading(state, payload) {
       state.loading = payload;
+    },
+    updateHabit(state, payload) {
+      console.log(payload);
+
+      const habit = state.loadedHabits.find(h => {
+        return h._links.self.href === payload.habit._links.self.href;
+      });
+      const record = habit.records.find(r => {
+        return r._links.self.href === payload.record._links.self.href;
+      });
+      record.status = payload.record.status;
+      record._links = payload.record._links;
     }
   },
   actions: {
     clearError({commit}) {
       commit('clearError');
+    },
+
+    doPerformRecord: function ({commit}, payload) {
+      const habit = payload.habit;
+      const record = payload.record;
+      console.log(habit);
+      console.log(record);
+      var performUrl = record._links.perform.href;
+      console.log("perform url: " + performUrl);
+      api.post(performUrl).then(function (response) {
+        commit("updateHabit", {habit: habit, record: response.data});
+      }.bind(this));
+    },
+
+    doFailRecord: function ({commit}, payload) {
+      const habit = payload.habit;
+      const record = payload.record;
+      console.log(habit);
+      console.log(record);
+      var failUrl = record._links.fail.href;
+      console.log("fail url: " + failUrl);
+      api.post(failUrl).then(function (response) {
+        commit("updateHabit", {habit: habit, record: response.data});
+      }.bind(this));
+    },
+
+    doUndoRecord: function ({commit}, payload) {
+      const habit = payload.habit;
+      const record = payload.record;
+      console.log(habit);
+      console.log(record);
+      var undoUrl = record._links.undo.href;
+      console.log("undo url: " + undoUrl);
+      api.post(undoUrl).then(function (response) {
+        commit("updateHabit", {habit: habit, record: response.data});
+      }.bind(this));
     },
 
     updateHabits({commit}) {
@@ -70,14 +118,35 @@ export const store = new Vuex.Store({
         console.log(response.data._links);
         return api.get(response.data._links.getHabits.href)
       }).then(response => {
-        setTimeout('', 5000);
         if (response.data._embedded && response.data._embedded.habitResourceList) {
-          console.info(response.data._embedded.habitResourceList);
-          commit("setLoadedHabits", response.data._embedded.habitResourceList);
+          const habits = response.data._embedded.habitResourceList;
+          const queries = [];
+          for (let i = 0; i < habits.length; ++i) {
+            const habit = habits[i];
+            const url = habit._links.getTracking.href;
+            queries.push(api.get(url));
+          }
+          axios.all(queries)
+            .then(function (responses) {
+              console.log(responses);
+              for (let i = 0; i < responses.length; ++i) {
+                const res = responses[i];
+                const records = res.data._embedded.calendarRecordResourceList;
+                if (records.length > 0) {
+                  const habit = habits.find(h => {
+                    return h._links.self.href === records[0]._links.getHabit.href;
+                  });
+                  habit.records = records;
+                }
+              }
+              commit("setLoadedHabits", habits);
+              commit("setLoading", false);
+            });
+
         } else {
           commit("setLoadedHabits", []);
+          commit("setLoading", false);
         }
-        commit("setLoading", false);
       }).catch(error => {
         console.error(error);
         commit("setError", error.data.response);
@@ -139,9 +208,28 @@ export const store = new Vuex.Store({
       localStorage.removeItem("username");
       localStorage.removeItem("password");
       commit("logout");
+    },
+
+    updateHabitToTrack({commit}, habit) {
+      commit('setLoading', true);
+      const url = habit._links.getTracking.href;
+      api.get(url)
+        .then(res => {
+          commit('setHabitTrackingRecords', res.data);
+          console.log(res.data);
+          commit('setLoading', false);
+        })
+        .catch(error => {
+          commit("setError", error.response.data);
+          commit('setLoading', false);
+        })
     }
   },
   getters: {
+    habitTracking(state) {
+      return state.habitTrackingRecords;
+    },
+
     isLoggedIn: state => {
       return state.isLoggedIn
     },
