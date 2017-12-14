@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import api from '../api'
-import router from '../router'
 
 Vue.use(Vuex);
 
@@ -21,6 +20,8 @@ export const store = new Vuex.Store({
     loadedHabits: [],
 
     loadedCurrentHabits: [],
+
+    user: null
   },
   mutations: {
     createHabit(state, payload) {
@@ -29,14 +30,16 @@ export const store = new Vuex.Store({
     login(state) {
       state.pending = true;
     },
-    loginSuccess(state) {
+    loginSuccess(state, payload) {
       state.isLoggedIn = true;
       state.pending = false;
+      state.user = payload;
     },
     logout(state) {
       state.loadedHabits = [];
       state.loadedCurrentHabits = [];
       state.isLoggedIn = false;
+      state.user = null;
     },
     setError(state, payload) {
       console.log(payload);
@@ -108,8 +111,7 @@ export const store = new Vuex.Store({
           console.log(response.data);
           localStorage.setItem('username', creds.username);
           localStorage.setItem('password', creds.password);
-          router.push("/habits");
-          commit("loginSuccess");
+          commit("loginSuccess", {username: creds.username, password: creds.password});
         })
         .catch(function (error) {
           commit("setError", error.response.data)
@@ -121,8 +123,7 @@ export const store = new Vuex.Store({
         .then(response => {
           localStorage.setItem('username', creds.username);
           localStorage.setItem('password', creds.password);
-          router.push("/habits");
-          commit("loginSuccess");
+          commit("loginSuccess", {username: creds.username, password: creds.password});
         })
         .catch(function (error) {
           commit("setError", error.response.data);
@@ -133,7 +134,6 @@ export const store = new Vuex.Store({
       localStorage.removeItem("username");
       localStorage.removeItem("password");
       commit("logout");
-      router.push("/signIn");
     }
   },
   getters: {
@@ -146,6 +146,10 @@ export const store = new Vuex.Store({
         username: localStorage.getItem('username'),
         password: localStorage.getItem('password')
       }
+    },
+
+    user: state => {
+      return state.user;
     },
 
     loadedHabits(state) {

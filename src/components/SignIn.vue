@@ -58,6 +58,17 @@
     computed: {
       error() {
         return this.$store.getters.error;
+      },
+
+      user() {
+        return this.$store.getters.user;
+      }
+    },
+    watch: {
+      user(value) {
+        if (value !== null && value !== undefined) {
+          this.$router.push("/tracking")
+        }
       }
     },
     methods: {

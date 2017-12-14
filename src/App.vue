@@ -75,6 +75,16 @@
         return self.menuItems.filter(function (item) {
           return item.auth === self.$store.getters.isLoggedIn;
         })
+      },
+      user() {
+        return this.$store.getters.user;
+      }
+    },
+    watch: {
+      user(value) {
+        if (value === null || value === undefined) {
+          this.$router.push("/signIn")
+        }
       }
     },
     methods: {
