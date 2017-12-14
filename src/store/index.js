@@ -6,7 +6,7 @@ import router from '../router'
 
 Vue.use(Vuex);
 
-const API_URL = 'http://localhost:8888/api/';
+const API_URL = process.env.API_URL;
 const SIGN_IN_URL = API_URL;
 const SIGN_UP_URL = API_URL + 'users';
 

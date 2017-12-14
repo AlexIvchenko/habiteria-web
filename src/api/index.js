@@ -1,10 +1,12 @@
 import axios from 'axios'
 // import {store} from '../store'
 
-const API_URL = 'http://localhost:8888/api/';
+const API_URL = process.env.API_URL;
 
 export default {
   getActions() {
+    console.log({env: process.env.NODE_ENV});
+    console.log({api: API_URL});
     return this.get(API_URL);
   },
 
