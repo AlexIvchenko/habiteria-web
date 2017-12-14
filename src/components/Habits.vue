@@ -1,5 +1,16 @@
 <template>
     <v-container>
+      <v-layout>
+        <v-flex xs12 class="text-xs-center">
+          <v-progress-circular
+            indeterminate
+            color="primary"
+            :width="7"
+            :size="70"
+            v-if="loading"
+          ></v-progress-circular>
+        </v-flex>
+      </v-layout>
       <v-layout row wrap v-for="habit in habits" :key="habit.name" class="mb-2">
         <v-flex xs12 sm8 offset-sm2 md6 offset-md3 lg4 offset-lg4>
           <v-card>
@@ -31,7 +42,10 @@
     computed: {
       habits() {
         return this.$store.getters.loadedHabits
-      }
+      },
+      loading() {
+        return this.$store.getters.loading;
+      },
     },
     created() {
       this.$store.dispatch("updateHabits");

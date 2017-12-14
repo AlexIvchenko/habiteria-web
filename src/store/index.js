@@ -48,6 +48,9 @@ export const store = new Vuex.Store({
     clearError(state) {
       state.error = null;
     },
+    clearHabits(state) {
+      state.loadedHabits = []
+    },
     setLoadedHabits(state, payload) {
       state.loadedHabits = payload;
     },
@@ -61,11 +64,13 @@ export const store = new Vuex.Store({
     },
 
     updateHabits({commit}) {
+      commit("clearHabits");
       commit("setLoading", true);
       api.getActions().then(response => {
         console.log(response.data._links);
         return api.get(response.data._links.getHabits.href)
       }).then(response => {
+        setTimeout('', 5000);
         if (response.data._embedded && response.data._embedded.habitResourceList) {
           console.info(response.data._embedded.habitResourceList);
           commit("setLoadedHabits", response.data._embedded.habitResourceList);
@@ -75,8 +80,8 @@ export const store = new Vuex.Store({
         commit("setLoading", false);
       }).catch(error => {
         console.error(error);
+        commit("setError", error.data.response);
         commit("setLoading", false);
-        commit("setError", error.data.response)
       })
     },
 
