@@ -65,10 +65,12 @@
     },
     methods: {
       onSaveChanges() {
+        console.log("saving");
         if (this.editedName.trim() === '' || this.editedDescription .trim() === '') {
           return
         }
         this.editDialog = false;
+        console.log("dispatching");
         this.$store.dispatch('updateHabitDetails', {
           name: this.editedName,
           description: this.editedDescription,

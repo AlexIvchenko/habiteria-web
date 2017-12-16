@@ -116,6 +116,7 @@ export const store = new Vuex.Store({
     },
 
     updateHabitDetails({commit}, payload) {
+      console.log("update habit hetails");
       commit('setLoading', true);
       const updated = {};
       if (payload.name) {
