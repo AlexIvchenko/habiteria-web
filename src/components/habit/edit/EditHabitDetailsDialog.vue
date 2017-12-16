@@ -66,7 +66,7 @@
     methods: {
       onSaveChanges() {
         console.log("saving");
-        if (this.editedName.trim() === '' || this.editedDescription .trim() === '') {
+        if (this.editedName.trim() === '') {
           return
         }
         this.editDialog = false;
