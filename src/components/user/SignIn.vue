@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import auth from '../auth'
+  import auth from '../../auth/index'
 
   export default {
     name: 'SignIn',

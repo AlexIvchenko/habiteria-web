@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/Index'
-import SignIn from '@/components/SignIn'
-import SignUp from '@/components/SignUp'
-import Habits from '@/components/Habits'
-import Habit from '@/components/Habit'
-import CreateHabit from '@/components/CreateHabit'
+import SignIn from '@/components/user/SignIn'
+import SignUp from '@/components/user/SignUp'
+import Habits from '@/components/habit/Habits'
+import Habit from '@/components/habit/Habit'
+import CreateHabit from '@/components/habit/CreateHabit'
 import Tracking from '@/components/Tracking'
 
 Vue.use(Router)
