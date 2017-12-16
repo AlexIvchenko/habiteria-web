@@ -43,11 +43,9 @@ export const store = new Vuex.Store({
       const habit = state.loadedHabits.find(h => {
         return h._links.self.href === payload._links.self.href;
       });
-      console.log(habit);
       habit.name = payload.name;
       habit.description = payload.description;
       habit._links = payload._links;
-      console.log(habit);
     },
     createHabit(state, payload) {
       state.loadedHabits.push(payload);
@@ -117,12 +115,13 @@ export const store = new Vuex.Store({
 
     updateHabitDetails({commit}, payload) {
       console.log("update habit hetails");
+      console.log(payload);
       commit('setLoading', true);
       const updated = {};
       if (payload.name) {
         updated.name = payload.name;
       }
-      if (payload.description) {
+      if (payload.description !== null && payload.description !== undefined) {
         updated.description = payload.description;
       }
       const habit = payload.habit;
