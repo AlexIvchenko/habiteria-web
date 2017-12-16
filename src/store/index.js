@@ -35,8 +35,7 @@ export const store = new Vuex.Store({
       const habit = state.loadedHabits.find(h => {
         return h._links.self.href === payload.habit._links.self.href;
       });
-      habit['records'] = payload.records;
-      console.log(habit.records);
+      habit.records = payload.records;
     },
 
     updateHabitDetails(state, payload) {
@@ -212,6 +211,9 @@ export const store = new Vuex.Store({
       }).then(response => {
         if (response.data._embedded && response.data._embedded.habitResourceList) {
           const habits = response.data._embedded.habitResourceList;
+          for (let i = 0; i < habits.length; ++i) {
+            habits[i].records = [];
+          }
           commit("setLoadedHabits", habits);
           commit("setLoading", false);
         } else {
