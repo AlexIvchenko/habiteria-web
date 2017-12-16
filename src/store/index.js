@@ -17,6 +17,8 @@ export const store = new Vuex.Store({
 
     loading: false,
 
+    trackingLoading: false,
+
     loadedHabits: [],
 
     loadedCurrentHabits: [],
@@ -26,6 +28,15 @@ export const store = new Vuex.Store({
   mutations: {
     loadCalendar(state, payload) {
       payload.habit.records = payload.records;
+    },
+
+    loadHabitTracking(state, payload) {
+      console.log(payload);
+      const habit = state.loadedHabits.find(h => {
+        return h._links.self.href === payload.habit._links.self.href;
+      });
+      habit['records'] = payload.records;
+      console.log(habit.records);
     },
 
     updateHabitDetails(state, payload) {
@@ -71,6 +82,10 @@ export const store = new Vuex.Store({
     },
     setLoading(state, payload) {
       state.loading = payload;
+    },
+
+    setTrackingLoading(state, payload) {
+      state.trackingLoading = payload;
     },
     updateHabit(state, payload) {
       console.log(payload);
@@ -172,6 +187,21 @@ export const store = new Vuex.Store({
       }
     },
 
+    loadHabitTracking({commit, state}, payload) {
+      commit('setTrackingLoading', true);
+      const url = payload.habit._links.getTracking.href;
+      api.get(url).then(response => {
+        const records = response.data._embedded.calendarRecordResourceList;
+        if (records.length > 0) {
+          const habit = state.loadedHabits.find(h => {
+            return h._links.self.href === records[0]._links.getHabit.href;
+          });
+          commit('loadHabitTracking', {habit: habit, records: records});
+          commit('setTrackingLoading', false);
+        }
+      })
+    },
+
     updateHabits({commit}) {
       console.log('updateHabits');
       commit("clearHabits");
@@ -182,29 +212,8 @@ export const store = new Vuex.Store({
       }).then(response => {
         if (response.data._embedded && response.data._embedded.habitResourceList) {
           const habits = response.data._embedded.habitResourceList;
-          const queries = [];
-          for (let i = 0; i < habits.length; ++i) {
-            const habit = habits[i];
-            const url = habit._links.getTracking.href;
-            queries.push(api.get(url));
-          }
-          axios.all(queries)
-            .then(function (responses) {
-              console.log(responses);
-              for (let i = 0; i < responses.length; ++i) {
-                const res = responses[i];
-                const records = res.data._embedded.calendarRecordResourceList;
-                if (records.length > 0) {
-                  const habit = habits.find(h => {
-                    return h._links.self.href === records[0]._links.getHabit.href;
-                  });
-                  habit.records = records;
-                }
-              }
-              commit("setLoadedHabits", habits);
-              commit("setLoading", false);
-            });
-
+          commit("setLoadedHabits", habits);
+          commit("setLoading", false);
         } else {
           commit("setLoadedHabits", []);
           commit("setLoading", false);
@@ -334,6 +343,10 @@ export const store = new Vuex.Store({
 
     loading(state) {
       return state.loading;
+    },
+
+    trackingLoading(state) {
+      return state.trackingLoading;
     },
 
     error(state) {

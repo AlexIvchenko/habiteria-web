@@ -15,14 +15,25 @@
       <v-layout row wrap v-else>
         <v-flex xs12 sm8 offset-sm2 md8 offset-md2 lg6 offset-lg3>
           <v-expansion-panel popout>
-            <v-expansion-panel-content v-for="habit in habits" :key="habit.name" class="mb-2" @expand="updateHabitToTrack(habit)">
+            <v-expansion-panel-content v-for="habit in habits" :key="habit.name" class="mb-2" @input="onSelect(habit, $event)">
               <div slot="header">
                 <h5 class="headline white--text mb-0">{{ habit.name }}</h5>
                 <h6 class="subheading blue--text mb-0">{{ habit.startDate | date }}</h6>
                 <v-progress-linear :value="habit.progress" height="15" :color="color(habit)"></v-progress-linear>
               </div>
 
-              <v-list two-line subheader>
+              <v-layout row justify-center v-if="trackingLoading">
+                <v-flex xs12 class="text-xs-center">
+                  <v-progress-circular
+                    indeterminate
+                    color="primary"
+                    :width="3"
+                    :size="30"
+                  ></v-progress-circular>
+                </v-flex>
+              </v-layout>
+
+              <v-list two-line subheader v-else>
                 <v-subheader inset>Tracking</v-subheader>
                 <v-list-tile avatar v-for="record in habit.records" :key="record.repeat">
                   <v-list-tile-avatar>
@@ -68,6 +79,9 @@
       },
       loading() {
         return this.$store.getters.loading;
+      },
+      trackingLoading() {
+        return this.$store.getters.trackingLoading;
       }
     },
     created() {
@@ -79,6 +93,12 @@
       }
     },
     methods: {
+      onSelect(habit, event) {
+        if (event === true) {
+          console.log(habit.name);
+          this.$store.dispatch("loadHabitTracking", {habit: habit});
+        }
+      },
       stateClass(record) {
         if (record.status === 'SUCCESS') {
           return 'green--text'
