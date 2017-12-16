@@ -42,5 +42,39 @@ export default {
     } else {
       return axios.post(url, data);
     }
+  },
+
+  put(url, data) {
+    const auth = {
+      username: localStorage.getItem('username'),
+      password: localStorage.getItem('password')
+    };
+    if (auth.username && auth.password) {
+      return axios({
+        url: url,
+        method: 'put',
+        data: data,
+        auth: auth
+      })
+    } else {
+      return axios.put(url, data);
+    }
+  },
+
+  patch(url, data) {
+    const auth = {
+      username: localStorage.getItem('username'),
+      password: localStorage.getItem('password')
+    };
+    if (auth.username && auth.password) {
+      return axios({
+        url: url,
+        method: 'patch',
+        data: data,
+        auth: auth
+      })
+    } else {
+      return axios.patch(url, data);
+    }
   }
 }

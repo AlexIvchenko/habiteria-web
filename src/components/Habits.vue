@@ -12,29 +12,19 @@
           </v-flex>
       </v-layout>
 
-      <v-layout row wrap>
+      <v-layout row wrap v-else>
         <v-flex xs12 sm8 offset-sm2 md8 offset-md2 lg6 offset-lg3>
-          <v-expansion-panel inset>
+          <v-expansion-panel popout>
             <v-expansion-panel-content v-for="habit in habits" :key="habit.name" class="mb-2" @expand="updateHabitToTrack(habit)">
               <div slot="header">
-                <v-layout row wrap>
-                  <v-flex sm8>
-                    <h5 class="headline white--text mb-0">{{ habit.name }}</h5>
-                  </v-flex>
-                  <v-flex sm4 class="text-sm-right">
-                    <v-badge color="green" v-model="show" right>
-                      <span slot="badge">{{ habit.records.length }}</span>
-                    </v-badge>
-                  </v-flex>
-                </v-layout>
-
+                <h5 class="headline white--text mb-0">{{ habit.name }}</h5>
                 <h6 class="subheading blue--text mb-0">{{ habit.startDate | date }}</h6>
                 <v-progress-linear :value="habit.progress" height="15" :color="color(habit)"></v-progress-linear>
               </div>
 
               <v-list two-line subheader>
                 <v-subheader inset>Tracking</v-subheader>
-                <v-list-tile avatar v-for="record in habit.records">
+                <v-list-tile avatar v-for="record in habit.records" :key="record.repeat">
                   <v-list-tile-avatar>
                     <v-icon class="grey lighten-1 white--text">folder</v-icon>
                   </v-list-tile-avatar>
@@ -55,9 +45,9 @@
                   </v-list-tile-action>
                 </v-list-tile>
               </v-list>
-              <v-btn flat :to="'/habits/' + habit.name">
+              <v-btn flat :to="'/habits/' + habit.id">
                 <v-icon left light>arrow_forward</v-icon>
-                View Statistic
+                View
               </v-btn>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -78,7 +68,7 @@
       },
       loading() {
         return this.$store.getters.loading;
-      },
+      }
     },
     created() {
       this.$store.dispatch("updateHabits");
@@ -99,10 +89,6 @@
       },
       color(habit) {
         return ['error', 'warning', 'success'][Math.floor(habit.progress / 40)]
-      },
-      updateHabitToTrack(habit) {
-        console.log("update");
-        this.$store.dispatch("updateHabitToTrack", habit);
       },
       doPerformRecord: function (habit, record) {
         this.$store.dispatch("doPerformRecord", {habit: habit, record: record});

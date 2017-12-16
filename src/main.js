@@ -6,6 +6,7 @@ import router from './router'
 import { store } from './store'
 import DateFilter from './filters/date'
 import AlertCmp from './components/Shared/Alert.vue'
+import EditHabitDetailsDialog from './components/habit/edit/EditHabitDetailsDialog.vue'
 
 Vue.config.productionTip = false;
 
@@ -15,6 +16,7 @@ Vue.use(Vuetify);
 
 Vue.filter('date', DateFilter);
 Vue.component('app-alert', AlertCmp);
+Vue.component('app-edit-habit-details-dialog', EditHabitDetailsDialog);
 
 /* eslint-disable no-new */
 new Vue({

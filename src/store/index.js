@@ -24,6 +24,21 @@ export const store = new Vuex.Store({
     user: null
   },
   mutations: {
+    loadCalendar(state, payload) {
+      payload.habit.records = payload.records;
+    },
+
+    updateHabitDetails(state, payload) {
+      console.log(payload);
+      const habit = state.loadedHabits.find(h => {
+        return h._links.self.href === payload._links.self.href;
+      });
+      console.log(habit);
+      habit.name = payload.name;
+      habit.description = payload.description;
+      habit._links = payload._links;
+      console.log(habit);
+    },
     createHabit(state, payload) {
       state.loadedHabits.push(payload);
     },
@@ -71,6 +86,44 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    loadCalendar({commit}, payload) {
+      commit("setLoading", true);
+      const url = payload.habit._links.getCalendar.href;
+      api.get(url)
+        .then(function (response) {
+          const calendar = response.data.records;
+          commit('loadCalendar', {habit: payload.habit, records: calendar});
+          commit("setLoading", false);
+        }.bind(this))
+        .catch(function (error) {
+          console.error(error);
+          commit("setLoading", false);
+        })
+    },
+
+    updateHabitDetails({commit}, payload) {
+      commit('setLoading', true);
+      const updated = {};
+      if (payload.name) {
+        updated.name = payload.name;
+      }
+      if (payload.description) {
+        updated.description = payload.description;
+      }
+      const habit = payload.habit;
+      let url = habit._links.update.href;
+      console.log(url);
+      api.patch(url, updated)
+        .then(response => {
+          commit('updateHabitDetails', response.data);
+          commit('setLoading', false);
+        })
+        .catch(error => {
+          commit('setLoading', false);
+          commit('setError', error.data.response)
+        })
+    },
+
     clearError({commit}) {
       commit('clearError');
     },
@@ -111,7 +164,16 @@ export const store = new Vuex.Store({
       }.bind(this));
     },
 
+    updateHabitsIfEmpty({dispatch, commit, state}) {
+      console.log('updateHabitsIfEmpty');
+      if (state.loadedHabits === null || state.loadedHabits === undefined || state.loadedHabits.length === 0) {
+        console.log('need to update habits');
+        dispatch('updateHabits');
+      }
+    },
+
     updateHabits({commit}) {
+      console.log('updateHabits');
       commit("clearHabits");
       commit("setLoading", true);
       api.getActions().then(response => {
@@ -226,6 +288,15 @@ export const store = new Vuex.Store({
     }
   },
   getters: {
+    records(state) {
+      return habit => {
+        const found = state.loadedHabits.find(h => {
+          return h.id === habit.id
+        });
+        return found.records;
+      }
+    },
+
     habitTracking(state) {
       return state.habitTrackingRecords;
     },
@@ -252,10 +323,12 @@ export const store = new Vuex.Store({
     },
 
     loadedHabit(state) {
-      return (name) => {
-        return state.loadedHabits.find((habit) => {
-          return habit.name === name;
-        })
+      return (id) => {
+        const habit = state.loadedHabits.find(h => {
+          return h.id === parseInt(id);
+        });
+        console.log(habit);
+        return habit;
       }
     },
 
