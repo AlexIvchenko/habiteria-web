@@ -20,6 +20,7 @@
                 id="name"
                 v-model="editedName"
                 required
+                :rules="nameRules"
               ></v-text-field>
 
               <v-text-field
@@ -28,6 +29,7 @@
                 id="description"
                 v-model="editedDescription"
                 required
+                clearable
               ></v-text-field>
             </v-card-text>
           </v-flex>
@@ -56,6 +58,9 @@
         editDialog: false,
         editedName: this.habit.name,
         editedDescription: this.habit.description,
+        nameRules: [
+          (v) => !!v || 'Name is required'
+        ],
       }
     },
     computed: {
