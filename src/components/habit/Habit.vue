@@ -56,9 +56,6 @@
 
   export default {
     props: ['id'],
-//    mounted() {
-//      this.$store.dispatch("updateHabitsIfEmpty");
-//    },
     data() {
       return {
         showCalendar: false,

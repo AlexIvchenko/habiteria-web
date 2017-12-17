@@ -57,7 +57,7 @@
       return {
         sideNav: false,
         menuItems: [
-          {icon: 'supervisor_account', title: 'Habits', link: '/habits', auth: true},
+          {icon: 'timeline', title: 'Habits', link: '/habits', auth: true},
           {icon: 'add', title: 'Create Habit', link: '/habit/new', auth: true},
           {icon: 'watch', title: 'Tracking', link: '/tracking', auth: true},
           {icon: 'person', title: 'Profile', link: '/profile', auth: true},

@@ -37,7 +37,7 @@
                 <v-subheader inset>Tracking</v-subheader>
                 <v-list-tile avatar v-for="record in habit.records" :key="record.repeat">
                   <v-list-tile-avatar>
-                    <v-icon class="grey lighten-1 white--text">folder</v-icon>
+                    <v-icon class="grey lighten-1 white--text">timeline</v-icon>
                   </v-list-tile-avatar>
                   <v-list-tile-content>
                     <v-list-tile-title :class=stateClass(record)>{{ record.status }}</v-list-tile-title>
@@ -45,13 +45,16 @@
                   </v-list-tile-content>
                   <v-list-tile-action>
                     <v-btn flat color="green" v-if="record._links.perform" v-on:click="doPerformRecord(habit, record)">
-                      <v-icon color="green lighten-1">done_all</v-icon>
+                      <v-icon color="green lighten-1">done</v-icon>
+                      Perform
                     </v-btn>
                     <v-btn flat color="red" v-if="record._links.fail" v-on:click="doFailRecord(habit, record)">
                       <v-icon color="red lighten-1">clear</v-icon>
+                      Fail
                     </v-btn>
                     <v-btn flat color="orange" v-if="record._links.undo" v-on:click="doUndoRecord(habit, record)">
-                      <v-icon color="orange lighten-1">history</v-icon>
+                      <v-icon color="orange lighten-1">undo</v-icon>
+                      Undo
                     </v-btn>
                   </v-list-tile-action>
                 </v-list-tile>
