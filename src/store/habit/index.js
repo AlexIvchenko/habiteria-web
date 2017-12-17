@@ -187,7 +187,12 @@ export default {
         return api.post(url, payload);
       }).then(response => {
         console.log(response.data);
-        commit("createHabit", payload);
+        const habit = response.data;
+        commit("createHabit", {
+          name: habit.name,
+          description: habit.description,
+          schedule: habit.schedule,
+        });
         commit("setLoading", false);
       }).catch(error => {
         commit("setError", error.data.response);

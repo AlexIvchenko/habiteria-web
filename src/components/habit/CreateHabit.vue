@@ -20,6 +20,7 @@
                         id="name"
                         v-model="habit.name"
                         required
+                        :rules="nameRules"
                       ></v-text-field>
                     </v-flex>
                   </v-layout>
@@ -32,6 +33,7 @@
                         id="description"
                         v-model="habit.description"
                         required
+                        clearable
                       ></v-text-field>
                     </v-flex>
                   </v-layout>
@@ -67,8 +69,9 @@
                           v-model="habit.schedule.start"
                           prepend-icon="event"
                           readonly
+                          :rules="startRules"
                         ></v-text-field>
-                        <v-date-picker v-model="habit.schedule.start" no-title scrollable actions>
+                        <v-date-picker v-model="habit.schedule.start" no-title scrollable actions :allowed-dates="availableDates">
                           <template slot-scope="{ save, cancel }">
                             <v-card-actions>
                               <v-spacer></v-spacer>
@@ -96,10 +99,11 @@
                           slot="activator"
                           label="End Date"
                           v-model="habit.schedule.end"
+                          :rules="endRules"
                           prepend-icon="event"
                           readonly
                         ></v-text-field>
-                        <v-date-picker v-model="habit.schedule.end" no-title scrollable actions>
+                        <v-date-picker v-model="habit.schedule.end" no-title scrollable actions :allowed-dates="availableDates">
                           <template slot-scope="{ save, cancel }">
                             <v-card-actions>
                               <v-spacer></v-spacer>
@@ -129,6 +133,12 @@
 
 <script>
   export default {
+    created() {
+        const date = new Date();
+        date.setHours(0,0,0,0);
+        this.habit.schedule.start = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        this.habit.schedule.end = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    },
     data() {
       return {
         menu1: false,
@@ -142,6 +152,22 @@
             type: '',
           }
         },
+        nameRules: [
+          (v) => !!v || 'Name is required'
+        ],
+        startRules: [
+          (v) => !!v || 'start date is required',
+        ],
+        endRules: [
+          (v) => !!v || 'end date is required',
+        ],
+        availableDates: function (str) {
+          const now = new Date();
+          const date = new Date(str);
+          now.setHours(0,0,0,0);
+          date.setHours(0,0,0,0);
+          return date >= now
+        },
         items: [
           {value: 'DAILY', text: 'Daily'},
           {value: 'WEEKEND', text: 'Weekend'},
@@ -149,12 +175,31 @@
         ]
       }
     },
+    watch: {
+      end(value) {
+        if (value < this.habit.schedule.start) {
+          this.habit.schedule.start = null
+        }
+      },
+      start(value) {
+        if (value > this.habit.schedule.end) {
+          this.habit.schedule.end = null
+        }
+      }
+    },
     computed: {
+      end() {
+        return this.habit.schedule.end;
+      },
+      start() {
+        return this.habit.schedule.start;
+      },
       formIsValid() {
         return this.habit.name !== '' &&
           this.habit.schedule.type !== '' &&
           this.habit.schedule.start !== '' &&
-          this.habit.schedule.end !== ''
+          this.habit.schedule.end !== '' &&
+          new Date(this.habit.schedule.end) > new Date(this.habit.schedule.start);
       }
     },
     methods: {
