@@ -133,12 +133,6 @@
 
 <script>
   export default {
-    created() {
-        const date = new Date();
-        date.setHours(0,0,0,0);
-        this.habit.schedule.start = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-        this.habit.schedule.end = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    },
     data() {
       return {
         menu1: false,
@@ -147,8 +141,8 @@
           name: '',
           description: '',
           schedule: {
-            start: '',
-            end: '',
+            start: null,
+            end: null,
             type: '',
           }
         },
