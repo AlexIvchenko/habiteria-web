@@ -10,6 +10,7 @@ npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
+habiteria rest api(https://github.com/AlexIvchenko/habiteria) should work at localhost:8888
 
 # build for production with minification
 npm run build
